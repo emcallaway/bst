@@ -1,10 +1,11 @@
 package taojava.util;
 
 import java.io.PrintWriter;
-
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.NoSuchElementException;
+import java.util.Queue;
 import java.util.Stack;
 
 /**
@@ -189,6 +190,94 @@ public class BST<K,V> implements Dictionary<K,V> {
         } // if the tree is nonempty
     } // insert(BSTNode, K, V)
 
+    /**
+     * Print all of the elements in some order or other.
+     * 
+     * Note: We are trying to avoid recursion.
+     */
+    public void print(PrintWriter pen) 
+    {
+      // A collection of the remaining things to print
+      Stack<Object> remaining = new Stack<Object>();
+      remaining.push(this.root);
+      // Invariants: 
+      //   remaining only contains Strings or BSTNodes
+      //   All key/value pairs in the tree are either
+      //     (a) already printed
+      //     (b) in remaining
+      //     (c) in or below a node in remaining
+      while (!remaining.isEmpty()) 
+        {
+          Object next = remaining.pop();
+          if (next instanceof String) 
+            {
+              pen.print(next);
+              pen.print(" ");
+            }  // if it's a string
+          else 
+            {
+              // next must be a BSTNode
+              @SuppressWarnings("unchecked")
+              BSTNode node = (BSTNode) next;
+              if (node.larger != null) 
+                {
+                  remaining.push(node.larger);
+                } // if (node.larger != null)
+              if (node.smaller != null) 
+                {
+                  remaining.push(node.smaller);
+                } // if (node.smaller != null)
+              remaining.push(node.value);
+            } // if it's a node
+        } // while
+        pen.println();
+    } // print(PrintWriter)
+    
+    /**
+     * Print all of the elements in some order or other.
+     * 
+     * Note: We are trying to avoid recursion.
+     */
+    public void print2(PrintWriter pen) 
+    {
+      // A collection of the remaining things to print
+      Queue<Object> remaining = new LinkedList<Object>();
+      //remaining.push(this.root);
+      remaining.add(this.root);
+      // Invariants: 
+      //   remaining only contains Strings or BSTNodes
+      //   All key/value pairs in the tree are either
+      //     (a) already printed
+      //     (b) in remaining
+      //     (c) in or below a node in remaining
+      while (!remaining.isEmpty()) 
+        {
+      //    Object next = remaining.pop();
+          Object next = remaining.poll();
+          if (next instanceof String) 
+            {
+              pen.print(next);
+              pen.print(" ");
+            }  // if it's a string
+          else 
+            {
+              // next must be a BSTNode
+              @SuppressWarnings("unchecked")
+              BSTNode node = (BSTNode) next;
+              if (node.smaller != null) 
+                {
+                  remaining.add(node.smaller);
+                } // if (node.smaller != null)
+              if (node.larger != null) 
+                {
+                  remaining.add(node.larger);
+                } // if (node.larger != null)
+              
+              remaining.add(node.value);
+            } // if it's a node
+        } // while
+        pen.println();
+    } // print(PrintWriter)
     // +---------------+---------------------------------------------------
     // | Inner Classes |
     // +---------------+
